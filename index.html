@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>猫猫工具箱 · 在线小工具合集</title>
+  <meta name="description" content="WRC 奖项计算器与比赛分数分析工具合集" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+</head>
+<body>
+  <div class="app">
+    <header class="site-header">
+      <div class="brand-row">
+        <div class="brand">
+          <div class="brand-mark">
+            <span class="brand-dot" aria-hidden="true"></span>
+            <h1 class="brand-name">猫猫工具箱</h1>
+          </div>
+          <p class="brand-tagline">面向赛事运营与试卷质检的在线小工具合集，数据仅在本地浏览器处理。</p>
+        </div>
+        <div class="header-meta">
+          <span class="pill"><i></i>纯前端 · 不上云</span>
+          <span class="pill"><i style="background:var(--coral)"></i>Excel 友好</span>
+        </div>
+      </div>
+
+      <nav class="tabs" role="tablist" aria-label="工具切换">
+        <button class="tab-btn active" role="tab" data-tab="wrc" aria-selected="true">WRC 奖项计算器</button>
+        <button class="tab-btn" role="tab" data-tab="score" aria-selected="false">比赛分数分析</button>
+      </nav>
+    </header>
+
+    <!-- ========== Tab 1: WRC ========== -->
+    <section id="panel-wrc" class="tab-panel active" role="tabpanel">
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>获奖比例设置</h2>
+            <p class="hint">可切换官方 / 实际两套预设，也可手动微调下方比例</p>
+          </div>
+          <div class="actions" data-export-hide>
+            <button type="button" class="btn btn-secondary" id="resetWrcBtn">恢复默认组别</button>
+            <button type="button" class="btn btn-primary" id="exportWrcBtn">导出页面图片</button>
+          </div>
+        </div>
+        <div class="preset-row" role="group" aria-label="比例预设">
+          <button type="button" class="preset-btn active" id="presetOfficial" data-preset="official">
+            <span class="preset-name">官方比例</span>
+            <span class="preset-desc">一等 15% · 二等 30% · 三等 50% · 不获奖 5%</span>
+          </button>
+          <button type="button" class="preset-btn" id="presetActual" data-preset="actual">
+            <span class="preset-name">实际比例</span>
+            <span class="preset-desc">一等 15% · 二等 35% · 三等 50% · 不获奖 0%</span>
+          </button>
+        </div>
+        <div class="grid-4" style="margin-top:14px">
+          <div class="field">
+            <label for="ratioFirst">一等奖 (%)</label>
+            <input id="ratioFirst" type="number" min="0" max="100" step="1" value="15" />
+          </div>
+          <div class="field">
+            <label for="ratioSecond">二等奖 (%)</label>
+            <input id="ratioSecond" type="number" min="0" max="100" step="1" value="30" />
+          </div>
+          <div class="field">
+            <label for="ratioThird">三等奖 (%)</label>
+            <input id="ratioThird" type="number" min="0" max="100" step="1" value="50" />
+          </div>
+          <div class="field">
+            <label for="ratioNone">不获奖 (%)</label>
+            <input id="ratioNone" type="number" min="0" max="100" step="1" value="5" />
+          </div>
+        </div>
+        <p class="hint" id="ratioSumHint" style="margin-top:12px">比例合计：100% ✓</p>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>分语言组别明细</h2>
+            <p class="hint">对应模板上半区：按各语言组别人数即时计算奖项名额（四舍五入取整）</p>
+          </div>
+          <button type="button" class="btn btn-ghost" id="addGroupBtn">＋ 添加组别</button>
+        </div>
+        <div class="table-wrap">
+          <table class="data">
+            <thead>
+              <tr>
+                <th>组别</th>
+                <th>学段</th>
+                <th>实际参赛人数</th>
+                <th>一等奖</th>
+                <th>二等奖</th>
+                <th>三等奖</th>
+                <th>不获奖</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="wrcGroupBody"></tbody>
+            <tfoot id="wrcGroupFoot"></tfoot>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel panel-emphasis">
+        <div class="panel-head">
+          <div>
+            <h2>学段汇总</h2>
+            <p class="hint">对应模板下半区：小低 / 小高 / 初合并统计；名额取整，旁注精确值（一位小数）</p>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="data">
+            <thead>
+              <tr>
+                <th>学段</th>
+                <th>实际参赛人数</th>
+                <th>一等奖</th>
+                <th>二等奖</th>
+                <th>三等奖</th>
+                <th>不获奖</th>
+              </tr>
+            </thead>
+            <tbody id="wrcSummaryBody"></tbody>
+            <tfoot id="wrcSummaryFoot"></tfoot>
+          </table>
+        </div>
+        <div class="note-box">
+          说明：各奖项按「人数 × 比例」独立计算后取整，四档合计可能与参赛人数有 ±1 的舍入差，与 Excel 模板行为一致。
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>冠亚季按语言比例平分</h2>
+            <p class="hint">冠、亚、季从一等奖中产生；多语言学段按人数占比拆分一等奖名额及冠亚季席位</p>
+          </div>
+        </div>
+        <div class="split-grid" id="wrcSplitGrid"></div>
+      </div>
+
+      <div class="panel">
+        <div class="section-label">总览</div>
+        <div class="stat-grid" id="wrcStats"></div>
+      </div>
+    </section>
+
+    <!-- ========== Tab 2: Score Analysis ========== -->
+    <section id="panel-score" class="tab-panel" role="tabpanel">
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>上传成绩文件</h2>
+            <p class="hint">支持 .xlsx / .xls，可同时分析多场考试；自动识别单选、多选、填空、判断题得分列</p>
+          </div>
+        </div>
+        <div class="upload-zone" id="uploadZone">
+          <strong>点击或拖拽 Excel 文件到此处</strong>
+          <p>数据仅在本地解析，不会上传到服务器</p>
+          <input type="file" id="fileInput" accept=".xlsx,.xls" multiple />
+        </div>
+        <div class="file-list" id="fileList"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>分析设置</h2>
+            <p class="hint">错题率达到阈值的题目将标记为「需复核」</p>
+          </div>
+        </div>
+        <div class="controls-row">
+          <div class="field">
+            <label for="threshold">错题率阈值 (%)</label>
+            <input type="number" id="threshold" value="95" min="50" max="100" step="1" />
+          </div>
+          <button class="btn btn-primary" id="analyzeBtn" disabled>开始分析</button>
+          <button class="btn btn-secondary" id="clearBtn">清空</button>
+        </div>
+      </div>
+
+      <div class="panel" id="resultsPanel" style="display:none">
+        <div class="panel-head">
+          <div>
+            <h2>分析结果</h2>
+            <p class="hint">按错题率从高到低排列疑似问题题目</p>
+          </div>
+        </div>
+        <div class="stat-grid" id="summaryGrid" style="margin-bottom:16px"></div>
+        <div class="table-wrap">
+          <table class="data" id="resultsTable">
+            <thead>
+              <tr>
+                <th>文件</th>
+                <th>题型</th>
+                <th>题号</th>
+                <th>列名</th>
+                <th>题目分数</th>
+                <th>参考人数</th>
+                <th>答对人数</th>
+                <th>答错人数</th>
+                <th>错题率</th>
+                <th>状态</th>
+              </tr>
+            </thead>
+            <tbody id="resultsBody"></tbody>
+          </table>
+        </div>
+        <div class="actions" style="margin-top:14px">
+          <button class="btn btn-secondary" id="downloadTxtBtn" disabled>下载报告 (.txt)</button>
+          <button class="btn btn-secondary" id="downloadJsonBtn" disabled>下载报告 (.json)</button>
+        </div>
+      </div>
+
+      <div class="panel" id="logPanel" style="display:none">
+        <div class="panel-head">
+          <div>
+            <h2>报告日志</h2>
+            <p class="hint">结构化汇总，可导出图片分享</p>
+          </div>
+          <button class="btn btn-secondary" id="downloadImgBtn" disabled>导出图片 (.png)</button>
+        </div>
+        <div id="logExportArea">
+          <div class="log-box" id="logBox"></div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      猫猫工具箱 · WRC 奖项计算器 &amp; 比赛分数分析 · 本地运行预览
+    </footer>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script src="js/wrc-calculator.js"></script>
+  <script src="js/score-analysis.js"></script>
+</body>
+</html>
