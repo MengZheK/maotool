@@ -127,8 +127,26 @@
             <tfoot id="wrcSummaryFoot"></tfoot>
           </table>
         </div>
+
+        <div class="section-label" style="margin-top:20px">安全线（官方 / 实际取较小值，再前移 30%）</div>
+        <div class="table-wrap">
+          <table class="data">
+            <thead>
+              <tr>
+                <th>学段</th>
+                <th>实际参赛人数</th>
+                <th>一等奖安全线</th>
+                <th>二等奖安全线</th>
+                <th>三等奖安全线</th>
+                <th>不获奖安全线</th>
+              </tr>
+            </thead>
+            <tbody id="wrcSafetyBody"></tbody>
+            <tfoot id="wrcSafetyFoot"></tfoot>
+          </table>
+        </div>
         <div class="note-box">
-          说明：各奖项按「人数 × 比例」独立计算后取整，四档合计可能与参赛人数有 ±1 的舍入差，与 Excel 模板行为一致。
+          说明：各奖项按「人数 × 比例」独立计算后取整，四档合计可能与参赛人数有 ±1 的舍入差，与 Excel 模板行为一致。安全线：对比官方与实际两套名额后取较小值，再往前提 30%（×70% 取整）；安全线不超过该较小值。
         </div>
       </div>
 
@@ -138,6 +156,9 @@
             <h2>冠亚季按语言比例平分</h2>
             <p class="hint">冠、亚、季从一等奖中产生；多语言学段按人数占比拆分一等奖名额及冠亚季席位</p>
           </div>
+        </div>
+        <div class="note-box" style="margin-top:0;margin-bottom:14px">
+          如果人数不够分冠亚季，现场不颁奖，以组委会公布的冠亚季为准。
         </div>
         <div class="split-grid" id="wrcSplitGrid"></div>
       </div>

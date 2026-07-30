@@ -19,11 +19,15 @@
   let ratios = { ...PRESETS.official };
   let activePreset = "official";
 
+  const SAFETY_ADVANCE = 0.3; // 往前提 30% → 保留 70%
+
   const els = {
     groupBody: document.getElementById("wrcGroupBody"),
     groupFoot: document.getElementById("wrcGroupFoot"),
     summaryBody: document.getElementById("wrcSummaryBody"),
     summaryFoot: document.getElementById("wrcSummaryFoot"),
+    safetyBody: document.getElementById("wrcSafetyBody"),
+    safetyFoot: document.getElementById("wrcSafetyFoot"),
     splitGrid: document.getElementById("wrcSplitGrid"),
     stats: document.getElementById("wrcStats"),
     ratioFirst: document.getElementById("ratioFirst"),
@@ -186,6 +190,29 @@
     return `<td class="num ${cls}">${rounded}<span class="sub">精确 ${round1(raw).toFixed(1)}</span></td>`;
   }
 
+  /** 安全线：官方/实际取较小值，再往前提 30%（×70% 取整），且不超过较小值 */
+  function calcSafetyLine(count) {
+    const official = calcAwards(count, PRESETS.official);
+    const actual = calcAwards(count, PRESETS.actual);
+    const keys = ["first", "second", "third", "none"];
+    const out = {};
+    for (const key of keys) {
+      const smaller = Math.min(official[key], actual[key]);
+      const advanced = roundInt(smaller * (1 - SAFETY_ADVANCE));
+      out[key] = {
+        official: official[key],
+        actual: actual[key],
+        smaller,
+        safety: Math.min(advanced, smaller),
+      };
+    }
+    return out;
+  }
+
+  function safetyCell(item, cls) {
+    return `<td class="num ${cls}">${item.safety}<span class="sub">较小值 ${item.smaller}（官方 ${item.official} / 实际 ${item.actual}）</span></td>`;
+  }
+
   /** Largest remainder: split integer `total` across parts by count weight. */
   function splitByProportion(parts, total, allCount) {
     if (total <= 0 || allCount <= 0 || !parts.length) {
@@ -254,13 +281,48 @@
       <div class="stat"><div class="value award-3">${t.third}</div><div class="label">三等奖名额（取整）</div></div>
     `;
 
+    renderSafety(rows);
     renderLanguageSplit(rows);
+  }
+
+  function renderSafety(rows) {
+    if (!els.safetyBody || !els.safetyFoot) return;
+
+    els.safetyBody.innerHTML = rows
+      .map((row) => {
+        const s = calcSafetyLine(row.count);
+        return `
+          <tr>
+            <td>
+              <strong>${escapeHtml(row.category)}</strong>
+              <span class="sub">${row.parts.map((p) => `${escapeHtml(p.name)} ${p.count}`).join(" + ")}</span>
+            </td>
+            <td class="num">${row.count}</td>
+            ${safetyCell(s.first, "award-1")}
+            ${safetyCell(s.second, "award-2")}
+            ${safetyCell(s.third, "award-3")}
+            ${safetyCell(s.none, "award-0")}
+          </tr>`;
+      })
+      .join("");
+
+    const total = rows.reduce((sum, r) => sum + r.count, 0);
+    const st = calcSafetyLine(total);
+    els.safetyFoot.innerHTML = `
+      <tr>
+        <td>总计</td>
+        <td class="num">${total}</td>
+        ${safetyCell(st.first, "award-1")}
+        ${safetyCell(st.second, "award-2")}
+        ${safetyCell(st.third, "award-3")}
+        ${safetyCell(st.none, "award-0")}
+      </tr>`;
   }
 
   function renderLanguageSplit(summaryRows) {
     const targets = summaryRows.filter((r) => r.parts.length > 1);
     if (!targets.length) {
-      els.splitGrid.innerHTML = `<div class="split-card"><h3>无需拆分</h3><p style="color:var(--muted);font-size:0.88rem">当前各学段均只有单一语言组别。</p></div>`;
+      els.splitGrid.innerHTML = `<div class="split-card"><h3>无需拆分</h3><p style="color:var(--muted);font-size:0.88rem">当前各学段均只有单一语言组别。如果人数不够分冠亚季，现场不颁奖，以组委会公布的冠亚季为准。</p></div>`;
       return;
     }
 
@@ -275,6 +337,7 @@
         const podiumSplit = splitByProportion(row.parts, podiumCount, row.count);
         const podiumLabel =
           podiumCount === 3 ? "冠军 / 亚军 / 季军" : podiumCount === 2 ? "冠军 / 亚军" : podiumCount === 1 ? "冠军" : "无";
+        const notEnough = podiumCount < 3;
 
         return `
           <div class="split-card">
@@ -311,6 +374,11 @@
                       : "无一等奖则不产生冠亚季"
                   }
                 </div>
+                ${
+                  notEnough
+                    ? `<div class="podium-detail">人数不够分满冠亚季时，现场不颁奖，以组委会公布的冠亚季为准。</div>`
+                    : ""
+                }
               </li>
             </ul>
           </div>`;
