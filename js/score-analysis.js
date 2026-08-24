@@ -14,6 +14,7 @@
   const resultsPanel = document.getElementById("resultsPanel");
   const summaryGrid = document.getElementById("summaryGrid");
   const rateBody = document.getElementById("rateBody");
+  const fileRateGroups = document.getElementById("fileRateGroups");
   const resultsBody = document.getElementById("resultsBody");
   const logPanel = document.getElementById("logPanel");
   const logBox = document.getElementById("logBox");
@@ -76,6 +77,7 @@
     renderFileList();
     resultsPanel.style.display = "none";
     logPanel.style.display = "none";
+    if (fileRateGroups) fileRateGroups.innerHTML = "";
     downloadTxtBtn.disabled = true;
     downloadJsonBtn.disabled = true;
     downloadImgBtn.disabled = true;
@@ -316,7 +318,49 @@
     if (unknown.length) byType.push(buildRateBucket(unknown, "未知"));
 
     const overall = buildRateBucket(allQuestions, "全卷合计");
-    return { byType, overall };
+
+    // 每个上传文件视为一个独立组别
+    const fileNames = [...new Set(allQuestions.map((q) => q.fileName))];
+    const byFile = fileNames.map((fileName) => {
+      const qs = allQuestions.filter((q) => q.fileName === fileName);
+      const typeRows = QUESTION_TYPES.map((t) =>
+        buildRateBucket(
+          qs.filter((q) => q.type === t),
+          t
+        )
+      ).filter((x) => x.questionCount > 0);
+      const unk = qs.filter((q) => !QUESTION_TYPES.includes(q.type));
+      if (unk.length) typeRows.push(buildRateBucket(unk, "未知"));
+      return {
+        fileName,
+        groupLabel: fileName.replace(/\.(xlsx?|xls)$/i, "") || fileName,
+        byType: typeRows,
+        overall: buildRateBucket(qs, "本组合计"),
+      };
+    });
+
+    return { byType, overall, byFile };
+  }
+
+  function renderRateRows(rows) {
+    return rows
+      .map((r) => {
+        const isOverall = r.label === "全卷合计" || r.label === "本组合计";
+        const labelHtml = isOverall
+          ? `<strong>${escapeHtml(r.label)}</strong>`
+          : `<span class="badge badge-${r.label}">${escapeHtml(r.label)}</span>`;
+        return `
+          <tr class="${isOverall ? "rate-total" : ""}">
+            <td>${labelHtml}</td>
+            <td>${r.questionCount}</td>
+            <td>${r.attemptCount}</td>
+            <td>${r.correctCount}</td>
+            <td>${r.wrongCount}</td>
+            <td class="num" style="color:var(--danger);font-weight:700">${r.wrongPercent}%</td>
+            <td>${r.avgQuestionWrongPercent}%</td>
+          </tr>`;
+      })
+      .join("");
   }
 
   function renderResults(report) {
@@ -333,25 +377,40 @@
     `;
 
     if (rateBody && report.rateStats) {
-      const rows = [...report.rateStats.byType, report.rateStats.overall];
-      rateBody.innerHTML = rows
-        .map((r) => {
-          const isOverall = r.label === "全卷合计";
-          const labelHtml = isOverall
-            ? `<strong>${escapeHtml(r.label)}</strong>`
-            : `<span class="badge badge-${r.label}">${escapeHtml(r.label)}</span>`;
-          return `
-            <tr class="${isOverall ? "rate-total" : ""}">
-              <td>${labelHtml}</td>
-              <td>${r.questionCount}</td>
-              <td>${r.attemptCount}</td>
-              <td>${r.correctCount}</td>
-              <td>${r.wrongCount}</td>
-              <td class="num" style="color:var(--danger);font-weight:700">${r.wrongPercent}%</td>
-              <td>${r.avgQuestionWrongPercent}%</td>
-            </tr>`;
-        })
-        .join("");
+      rateBody.innerHTML = renderRateRows([...report.rateStats.byType, report.rateStats.overall]);
+    }
+
+    if (fileRateGroups && report.rateStats?.byFile) {
+      if (report.rateStats.byFile.length === 0) {
+        fileRateGroups.innerHTML = "";
+      } else {
+        fileRateGroups.innerHTML = report.rateStats.byFile
+          .map(
+            (group) => `
+            <div class="log-file-group" style="margin-bottom:12px">
+              <div class="log-file-name">组别：${escapeHtml(group.groupLabel)}
+                <span style="color:var(--muted);font-weight:400">（${escapeHtml(group.fileName)} · 错题率 ${group.overall.wrongPercent}%）</span>
+              </div>
+              <div class="table-wrap" style="border:none;border-radius:0">
+                <table class="data" style="min-width:0">
+                  <thead>
+                    <tr>
+                      <th>范围</th>
+                      <th>题目数</th>
+                      <th>作答人次</th>
+                      <th>答对人次</th>
+                      <th>答错人次</th>
+                      <th>错题率</th>
+                      <th>平均单题错题率</th>
+                    </tr>
+                  </thead>
+                  <tbody>${renderRateRows([...group.byType, group.overall])}</tbody>
+                </table>
+              </div>
+            </div>`
+          )
+          .join("");
+      }
     }
 
     const displayRows =
@@ -412,7 +471,7 @@
     `;
 
     if (report.rateStats) {
-      html += `<div class="log-section-title">各题型与总错题率</div>`;
+      html += `<div class="log-section-title">各题型与总错题率（全部文件汇总）</div>`;
       html += `<div class="log-type-stats" style="display:block">`;
       html += `<div class="table-wrap" style="margin-bottom:8px"><table class="data" style="min-width:0"><thead><tr>
         <th>范围</th><th>题目数</th><th>作答人次</th><th>答错人次</th><th>错题率</th><th>平均单题错题率</th>
@@ -428,6 +487,32 @@
         </tr>`;
       }
       html += `</tbody></table></div></div>`;
+
+      if (report.rateStats.byFile?.length) {
+        html += `<div class="log-section-title">单文件组别 · 各题型与总错题率</div>`;
+        for (const group of report.rateStats.byFile) {
+          html += `
+            <div class="log-file-group">
+              <div class="log-file-name">组别：${escapeHtml(group.groupLabel)}
+                <span style="color:var(--muted);font-weight:400">（错题率 ${group.overall.wrongPercent}%）</span>
+              </div>
+              <div style="padding:8px 12px">
+                <table class="data" style="min-width:0"><thead><tr>
+                  <th>范围</th><th>题目数</th><th>作答人次</th><th>答错人次</th><th>错题率</th><th>平均单题错题率</th>
+                </tr></thead><tbody>`;
+          for (const r of [...group.byType, group.overall]) {
+            html += `<tr>
+              <td>${escapeHtml(r.label)}</td>
+              <td>${r.questionCount}</td>
+              <td>${r.attemptCount}</td>
+              <td>${r.wrongCount}</td>
+              <td style="color:var(--danger);font-weight:700">${r.wrongPercent}%</td>
+              <td>${r.avgQuestionWrongPercent}%</td>
+            </tr>`;
+          }
+          html += `</tbody></table></div></div>`;
+        }
+      }
     }
 
     if (report.errors.length) {
@@ -531,7 +616,7 @@
     lines.push("");
 
     if (report.rateStats) {
-      lines.push("【各题型与总错题率】");
+      lines.push("【各题型与总错题率 · 全部文件汇总】");
       lines.push("  范围\t题目数\t作答人次\t答错人次\t错题率\t平均单题错题率");
       for (const r of [...report.rateStats.byType, report.rateStats.overall]) {
         lines.push(
@@ -539,6 +624,19 @@
         );
       }
       lines.push("");
+
+      if (report.rateStats.byFile?.length) {
+        lines.push("【单文件组别 · 各题型与总错题率】");
+        for (const group of report.rateStats.byFile) {
+          lines.push(`  >> 组别: ${group.groupLabel} (${group.fileName})  本组合计错题率 ${group.overall.wrongPercent}%`);
+          for (const r of [...group.byType, group.overall]) {
+            lines.push(
+              `     ${r.label}\t${r.questionCount}\t${r.attemptCount}\t${r.wrongCount}\t${r.wrongPercent}%\t${r.avgQuestionWrongPercent}%`
+            );
+          }
+          lines.push("");
+        }
+      }
     }
 
     if (report.errors.length) {
