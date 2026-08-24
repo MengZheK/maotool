@@ -91,6 +91,15 @@ body::before {
   gap: 10px;
 }
 
+.brand-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 8px 20px rgba(13, 138, 124, 0.22);
+  animation: pulse-dot 2.8s ease-in-out infinite;
+}
+
 .brand-dot {
   width: 14px;
   height: 14px;
@@ -655,6 +664,8 @@ input[type="file"] { display: none; }
 
 tr.flagged { background: var(--danger-soft); }
 tr.flagged td:first-child { color: var(--danger); font-weight: 700; }
+tr.rate-total { background: rgba(13, 138, 124, 0.08); }
+tr.rate-total td { font-weight: 700; }
 
 .empty-hint {
   text-align: center;

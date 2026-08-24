@@ -13,6 +13,7 @@
   const thresholdInput = document.getElementById("threshold");
   const resultsPanel = document.getElementById("resultsPanel");
   const summaryGrid = document.getElementById("summaryGrid");
+  const rateBody = document.getElementById("rateBody");
   const resultsBody = document.getElementById("resultsBody");
   const logPanel = document.getElementById("logPanel");
   const logBox = document.getElementById("logBox");
@@ -262,6 +263,7 @@
     }
 
     const flagged = allQuestions.filter((q) => q.flagged);
+    const rateStats = buildRateStats(allQuestions);
 
     lastReport = {
       generatedAt: new Date().toISOString(),
@@ -272,6 +274,7 @@
       totalStudents,
       flagged,
       allQuestions,
+      rateStats,
       errors,
     };
 
@@ -280,16 +283,76 @@
     analyzeBtn.textContent = "开始分析";
   }
 
+  function buildRateBucket(questions, label) {
+    const questionCount = questions.length;
+    const attemptCount = questions.reduce((s, q) => s + q.totalStudents, 0);
+    const correctCount = questions.reduce((s, q) => s + q.correctCount, 0);
+    const wrongCount = questions.reduce((s, q) => s + q.wrongCount, 0);
+    const wrongRate = attemptCount > 0 ? wrongCount / attemptCount : 0;
+    const avgQuestionWrongRate =
+      questionCount > 0 ? questions.reduce((s, q) => s + q.wrongRate, 0) / questionCount : 0;
+    return {
+      label,
+      questionCount,
+      attemptCount,
+      correctCount,
+      wrongCount,
+      wrongRate,
+      wrongPercent: (wrongRate * 100).toFixed(1),
+      avgQuestionWrongRate,
+      avgQuestionWrongPercent: (avgQuestionWrongRate * 100).toFixed(1),
+    };
+  }
+
+  function buildRateStats(allQuestions) {
+    const byType = QUESTION_TYPES.map((t) =>
+      buildRateBucket(
+        allQuestions.filter((q) => q.type === t),
+        t
+      )
+    ).filter((x) => x.questionCount > 0);
+
+    const unknown = allQuestions.filter((q) => !QUESTION_TYPES.includes(q.type));
+    if (unknown.length) byType.push(buildRateBucket(unknown, "未知"));
+
+    const overall = buildRateBucket(allQuestions, "全卷合计");
+    return { byType, overall };
+  }
+
   function renderResults(report) {
     resultsPanel.style.display = "block";
     logPanel.style.display = "block";
+
+    const overallRate = report.rateStats?.overall?.wrongPercent ?? "—";
 
     summaryGrid.innerHTML = `
       <div class="stat"><div class="value">${report.fileCount}</div><div class="label">分析文件数</div></div>
       <div class="stat"><div class="value">${report.totalQuestions}</div><div class="label">题目总数</div></div>
       <div class="stat"><div class="value" style="color:var(--danger)">${report.flaggedCount}</div><div class="label">疑似有问题</div></div>
-      <div class="stat"><div class="value">${report.thresholdPercent}%</div><div class="label">错题率阈值</div></div>
+      <div class="stat"><div class="value" style="color:var(--coral)">${overallRate}%</div><div class="label">全卷错题率</div></div>
     `;
+
+    if (rateBody && report.rateStats) {
+      const rows = [...report.rateStats.byType, report.rateStats.overall];
+      rateBody.innerHTML = rows
+        .map((r) => {
+          const isOverall = r.label === "全卷合计";
+          const labelHtml = isOverall
+            ? `<strong>${escapeHtml(r.label)}</strong>`
+            : `<span class="badge badge-${r.label}">${escapeHtml(r.label)}</span>`;
+          return `
+            <tr class="${isOverall ? "rate-total" : ""}">
+              <td>${labelHtml}</td>
+              <td>${r.questionCount}</td>
+              <td>${r.attemptCount}</td>
+              <td>${r.correctCount}</td>
+              <td>${r.wrongCount}</td>
+              <td class="num" style="color:var(--danger);font-weight:700">${r.wrongPercent}%</td>
+              <td>${r.avgQuestionWrongPercent}%</td>
+            </tr>`;
+        })
+        .join("");
+    }
 
     const displayRows =
       report.flagged.length > 0
@@ -343,10 +406,29 @@
         <div class="log-summary-item"><div class="num">${report.fileCount}</div><div class="lbl">分析文件</div></div>
         <div class="log-summary-item"><div class="num">${report.totalStudents}</div><div class="lbl">参考人数（最大）</div></div>
         <div class="log-summary-item"><div class="num">${report.totalQuestions}</div><div class="lbl">题目总数</div></div>
-        <div class="log-summary-item"><div class="num">≥ ${report.thresholdPercent}%</div><div class="lbl">错题率阈值</div></div>
+        <div class="log-summary-item"><div class="num">${report.rateStats?.overall?.wrongPercent ?? "—"}%</div><div class="lbl">全卷错题率</div></div>
         <div class="log-summary-item${hasIssues ? " alert" : ""}"><div class="num">${report.flaggedCount}</div><div class="lbl">疑似有问题</div></div>
       </div>
     `;
+
+    if (report.rateStats) {
+      html += `<div class="log-section-title">各题型与总错题率</div>`;
+      html += `<div class="log-type-stats" style="display:block">`;
+      html += `<div class="table-wrap" style="margin-bottom:8px"><table class="data" style="min-width:0"><thead><tr>
+        <th>范围</th><th>题目数</th><th>作答人次</th><th>答错人次</th><th>错题率</th><th>平均单题错题率</th>
+      </tr></thead><tbody>`;
+      for (const r of [...report.rateStats.byType, report.rateStats.overall]) {
+        html += `<tr>
+          <td>${escapeHtml(r.label)}</td>
+          <td>${r.questionCount}</td>
+          <td>${r.attemptCount}</td>
+          <td>${r.wrongCount}</td>
+          <td style="color:var(--danger);font-weight:700">${r.wrongPercent}%</td>
+          <td>${r.avgQuestionWrongPercent}%</td>
+        </tr>`;
+      }
+      html += `</tbody></table></div></div>`;
+    }
 
     if (report.errors.length) {
       html += `<div class="log-errors"><strong>解析错误</strong><ul>`;
@@ -444,8 +526,20 @@
     lines.push(`  参考人数:     ${report.totalStudents} 人（最大）`);
     lines.push(`  题目总数:     ${report.totalQuestions} 道`);
     lines.push(`  错题率阈值:   >= ${report.thresholdPercent}%`);
+    lines.push(`  全卷错题率:   ${report.rateStats?.overall?.wrongPercent ?? "—"}%`);
     lines.push(`  疑似有问题:   ${report.flaggedCount} 道  ${hasIssues ? "!!" : ""}`);
     lines.push("");
+
+    if (report.rateStats) {
+      lines.push("【各题型与总错题率】");
+      lines.push("  范围\t题目数\t作答人次\t答错人次\t错题率\t平均单题错题率");
+      for (const r of [...report.rateStats.byType, report.rateStats.overall]) {
+        lines.push(
+          `  ${r.label}\t${r.questionCount}\t${r.attemptCount}\t${r.wrongCount}\t${r.wrongPercent}%\t${r.avgQuestionWrongPercent}%`
+        );
+      }
+      lines.push("");
+    }
 
     if (report.errors.length) {
       lines.push("【解析错误】");

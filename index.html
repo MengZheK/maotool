@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>猫猫工具箱 · 在线小工具合集</title>
   <meta name="description" content="WRC 奖项计算器与比赛分数分析工具合集" />
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <link rel="apple-touch-icon" href="assets/cat-icon.png" />
   <link rel="stylesheet" href="css/styles.css" />
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
@@ -15,7 +17,7 @@
       <div class="brand-row">
         <div class="brand">
           <div class="brand-mark">
-            <span class="brand-dot" aria-hidden="true"></span>
+            <img class="brand-icon" src="assets/cat-icon.png" width="44" height="44" alt="猫猫工具箱" />
             <h1 class="brand-name">猫猫工具箱</h1>
           </div>
           <p class="brand-tagline">面向赛事运营与试卷质检的在线小工具合集，数据仅在本地浏览器处理。</p>
@@ -211,6 +213,23 @@
           </div>
         </div>
         <div class="stat-grid" id="summaryGrid" style="margin-bottom:16px"></div>
+        <div class="section-label">各题型与总错题率</div>
+        <div class="table-wrap" style="margin-bottom:16px">
+          <table class="data" id="rateTable">
+            <thead>
+              <tr>
+                <th>范围</th>
+                <th>题目数</th>
+                <th>作答人次</th>
+                <th>答对人次</th>
+                <th>答错人次</th>
+                <th>错题率</th>
+                <th>平均单题错题率</th>
+              </tr>
+            </thead>
+            <tbody id="rateBody"></tbody>
+          </table>
+        </div>
         <div class="table-wrap">
           <table class="data" id="resultsTable">
             <thead>
