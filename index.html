@@ -272,10 +272,47 @@
     </section>
 
     <footer class="site-footer">
-      猫猫工具箱 · WRC 奖项计算器 &amp; 比赛分数分析 · 本地运行预览
+      <p class="footer-copy">猫猫工具箱 · WRC 奖项计算器 &amp; 比赛分数分析</p>
+      <div class="visit-stats" id="visitStats" aria-label="访问统计" hidden>
+        <span class="visit-item">
+          <span class="visit-label">访问</span>
+          <span class="visit-num" id="busuanzi_value_site_pv">—</span>
+        </span>
+        <span class="visit-sep" aria-hidden="true"></span>
+        <span class="visit-item">
+          <span class="visit-label">访客</span>
+          <span class="visit-num" id="busuanzi_value_site_uv">—</span>
+        </span>
+      </div>
     </footer>
   </div>
 
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <script>
+    (function () {
+      const box = document.getElementById("visitStats");
+      if (!box) return;
+      let tries = 0;
+      const timer = setInterval(function () {
+        tries += 1;
+        const pv = document.getElementById("busuanzi_value_site_pv");
+        const uv = document.getElementById("busuanzi_value_site_uv");
+        const ready =
+          pv &&
+          uv &&
+          pv.textContent &&
+          uv.textContent &&
+          pv.textContent !== "—" &&
+          !Number.isNaN(Number(String(pv.textContent).replace(/,/g, "")));
+        if (ready) {
+          box.hidden = false;
+          clearInterval(timer);
+        } else if (tries > 40) {
+          clearInterval(timer);
+        }
+      }, 250);
+    })();
+  </script>
   <script src="js/app.js"></script>
   <script src="js/wrc-calculator.js"></script>
   <script src="js/score-analysis.js"></script>

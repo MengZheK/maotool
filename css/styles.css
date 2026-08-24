@@ -837,10 +837,58 @@ tr.rate-total td { font-weight: 700; }
 .log-errors ul { margin: 6px 0 0 18px; }
 
 .site-footer {
-  margin-top: 28px;
+  margin-top: 36px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
   text-align: center;
   color: var(--muted);
   font-size: 0.82rem;
+}
+
+.footer-copy {
+  opacity: 0.85;
+  letter-spacing: 0.02em;
+}
+
+.visit-stats {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.45);
+  border: 1px solid rgba(15, 28, 36, 0.06);
+  color: rgba(90, 111, 125, 0.9);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+}
+
+.visit-stats[hidden] { display: none; }
+
+.visit-item {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+}
+
+.visit-label {
+  font-weight: 500;
+  opacity: 0.72;
+}
+
+.visit-num {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: var(--ink-soft);
+  opacity: 0.78;
+}
+
+.visit-sep {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(90, 111, 125, 0.45);
 }
 
 @keyframes rise {
