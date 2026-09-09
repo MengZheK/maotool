@@ -41,6 +41,7 @@
             </svg>
           </span>
         </a>
+        <button class="tab-btn" role="tab" data-tab="schools" aria-selected="false">学校查询</button>
       </nav>
     </header>
 
@@ -281,8 +282,80 @@
       </div>
     </section>
 
+    <!-- ========== Tab 3: Schools ========== -->
+    <section id="panel-schools" class="tab-panel" role="tabpanel">
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>全国中小学查询</h2>
+            <p class="hint">支持校名关键词检索，或按省 → 市 → 区县逐级筛选（约 21 万所学校）</p>
+          </div>
+          <button type="button" class="btn btn-secondary" id="schoolResetBtn">清空条件</button>
+        </div>
+
+        <div class="field" style="margin-bottom:14px">
+          <label for="schoolKeyword">学校名称关键词</label>
+          <input id="schoolKeyword" type="search" placeholder="输入学校名称关键字，如：光明小学" autocomplete="off" />
+        </div>
+
+        <div class="section-label">地区筛选</div>
+        <div class="grid-3 school-cascade">
+          <div class="field">
+            <label for="schoolProvince">省份</label>
+            <select id="schoolProvince">
+              <option value="">全部省份</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="schoolCity">城市</label>
+            <select id="schoolCity" disabled>
+              <option value="">全部城市</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="schoolDistrict">区县</label>
+            <select id="schoolDistrict" disabled>
+              <option value="">全部区县</option>
+            </select>
+          </div>
+        </div>
+        <p class="hint" id="schoolStatus" style="margin-top:12px">请选择地区或输入校名开始查询</p>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>查询结果</h2>
+            <p class="hint" id="schoolResultMeta">尚未查询</p>
+          </div>
+          <div class="actions" id="schoolPager" style="display:none">
+            <button type="button" class="btn btn-secondary" id="schoolPrevBtn">上一页</button>
+            <span class="pager-info" id="schoolPageInfo">1 / 1</span>
+            <button type="button" class="btn btn-secondary" id="schoolNextBtn">下一页</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="data" id="schoolTable">
+            <thead>
+              <tr>
+                <th>学校名称</th>
+                <th>学段</th>
+                <th>省份</th>
+                <th>城市</th>
+                <th>区县</th>
+                <th>学校标识码</th>
+              </tr>
+            </thead>
+            <tbody id="schoolBody">
+              <tr><td colspan="6" class="empty-hint">选择省市区或输入关键词后显示结果</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
     <footer class="site-footer">
-      <p class="footer-copy">猫猫工具箱 · WRC 奖项计算器 &amp; 比赛分数分析</p>
+      <p class="footer-copy">猫猫工具箱 · WRC 奖项计算器 &amp; 比赛分数分析 &amp; 学校查询</p>
       <div class="visit-stats" id="visitStats" aria-label="访问统计" hidden>
         <span class="visit-item">
           <span class="visit-label">访问</span>
@@ -326,5 +399,6 @@
   <script src="js/app.js"></script>
   <script src="js/wrc-calculator.js"></script>
   <script src="js/score-analysis.js"></script>
+  <script src="js/schools-query.js"></script>
 </body>
 </html>

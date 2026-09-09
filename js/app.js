@@ -1,8 +1,10 @@
 (() => {
   const buttons = document.querySelectorAll("button.tab-btn");
   const panels = document.querySelectorAll(".tab-panel");
+  const VALID = new Set(["wrc", "score", "schools"]);
 
   function activate(id) {
+    if (!VALID.has(id)) id = "wrc";
     buttons.forEach((btn) => {
       const active = btn.dataset.tab === id;
       btn.classList.toggle("active", active);
@@ -19,6 +21,5 @@
   });
 
   const hash = location.hash.replace("#", "");
-  if (hash === "score" || hash === "wrc") activate(hash);
-  else activate("wrc");
+  activate(VALID.has(hash) ? hash : "wrc");
 })();

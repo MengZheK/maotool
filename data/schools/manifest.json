@@ -1,0 +1,198 @@
+{
+  "generatedAt": "2026-09-09T14:46:08.488Z",
+  "total": 212805,
+  "provinces": [
+    {
+      "province": "北京市",
+      "file": "北京市.json",
+      "count": 1502,
+      "bytes": 134215
+    },
+    {
+      "province": "天津市",
+      "file": "天津市.json",
+      "count": 1519,
+      "bytes": 139291
+    },
+    {
+      "province": "河北省",
+      "file": "河北省.json",
+      "count": 11758,
+      "bytes": 1016791
+    },
+    {
+      "province": "山西省",
+      "file": "山西省.json",
+      "count": 5985,
+      "bytes": 502977
+    },
+    {
+      "province": "内蒙古自治区",
+      "file": "内蒙古自治区.json",
+      "count": 2849,
+      "bytes": 266897
+    },
+    {
+      "province": "辽宁省",
+      "file": "辽宁省.json",
+      "count": 4583,
+      "bytes": 407159
+    },
+    {
+      "province": "吉林省",
+      "file": "吉林省.json",
+      "count": 3197,
+      "bytes": 289020
+    },
+    {
+      "province": "黑龙江省",
+      "file": "黑龙江省.json",
+      "count": 3271,
+      "bytes": 283563
+    },
+    {
+      "province": "上海市",
+      "file": "上海市.json",
+      "count": 1671,
+      "bytes": 146915
+    },
+    {
+      "province": "江苏省",
+      "file": "江苏省.json",
+      "count": 7363,
+      "bytes": 613970
+    },
+    {
+      "province": "浙江省",
+      "file": "浙江省.json",
+      "count": 5883,
+      "bytes": 489590
+    },
+    {
+      "province": "安徽省",
+      "file": "安徽省.json",
+      "count": 9946,
+      "bytes": 827745
+    },
+    {
+      "province": "福建省",
+      "file": "福建省.json",
+      "count": 6978,
+      "bytes": 566097
+    },
+    {
+      "province": "江西省",
+      "file": "江西省.json",
+      "count": 8821,
+      "bytes": 747986
+    },
+    {
+      "province": "山东省",
+      "file": "山东省.json",
+      "count": 12942,
+      "bytes": 1097044
+    },
+    {
+      "province": "河南省",
+      "file": "河南省.json",
+      "count": 22545,
+      "bytes": 1916895
+    },
+    {
+      "province": "湖北省",
+      "file": "湖北省.json",
+      "count": 8149,
+      "bytes": 706203
+    },
+    {
+      "province": "湖南省",
+      "file": "湖南省.json",
+      "count": 10885,
+      "bytes": 941580
+    },
+    {
+      "province": "广东省",
+      "file": "广东省.json",
+      "count": 16220,
+      "bytes": 1376713
+    },
+    {
+      "province": "广西壮族自治区",
+      "file": "广西壮族自治区.json",
+      "count": 10296,
+      "bytes": 882395
+    },
+    {
+      "province": "海南省",
+      "file": "海南省.json",
+      "count": 1905,
+      "bytes": 159771
+    },
+    {
+      "province": "重庆市",
+      "file": "重庆市.json",
+      "count": 3790,
+      "bytes": 339050
+    },
+    {
+      "province": "四川省",
+      "file": "四川省.json",
+      "count": 9612,
+      "bytes": 840258
+    },
+    {
+      "province": "贵州省",
+      "file": "贵州省.json",
+      "count": 8491,
+      "bytes": 798201
+    },
+    {
+      "province": "云南省",
+      "file": "云南省.json",
+      "count": 11111,
+      "bytes": 1042645
+    },
+    {
+      "province": "西藏自治区",
+      "file": "西藏自治区.json",
+      "count": 986,
+      "bytes": 79498
+    },
+    {
+      "province": "陕西省",
+      "file": "陕西省.json",
+      "count": 6566,
+      "bytes": 551777
+    },
+    {
+      "province": "甘肃省",
+      "file": "甘肃省.json",
+      "count": 6533,
+      "bytes": 560943
+    },
+    {
+      "province": "青海省",
+      "file": "青海省.json",
+      "count": 1073,
+      "bytes": 106623
+    },
+    {
+      "province": "宁夏回族自治区",
+      "file": "宁夏回族自治区.json",
+      "count": 1402,
+      "bytes": 118069
+    },
+    {
+      "province": "新疆维吾尔自治区",
+      "file": "新疆维吾尔自治区.json",
+      "count": 4683,
+      "bytes": 452289
+    },
+    {
+      "province": "新疆建设兵团",
+      "file": "新疆建设兵团.json",
+      "count": 290,
+      "bytes": 26362
+    }
+  ]
+}
