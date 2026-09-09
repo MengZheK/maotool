@@ -193,15 +193,44 @@ body::before {
 }
 
 a.tab-link {
+  position: relative;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  padding-right: 26px;
 }
 
 a.tab-link:hover {
   color: var(--accent-deep);
   background: var(--accent-soft);
+}
+
+a.tab-link .ext-badge {
+  position: absolute;
+  top: 7px;
+  right: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 5px;
+  color: var(--accent);
+  background: rgba(13, 138, 124, 0.12);
+  opacity: 0.78;
+  transition: opacity 0.2s, transform 0.2s, background 0.2s, color 0.2s;
+}
+
+a.tab-link:hover .ext-badge {
+  opacity: 1;
+  color: #fff;
+  background: var(--accent);
+  transform: translate(1px, -1px);
+}
+
+a.tab-link .ext-badge svg {
+  display: block;
 }
 
 .tab-panel {
