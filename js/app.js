@@ -1,5 +1,5 @@
 (() => {
-  const buttons = document.querySelectorAll(".tab-btn");
+  const buttons = document.querySelectorAll("button.tab-btn");
   const panels = document.querySelectorAll(".tab-panel");
 
   function activate(id) {

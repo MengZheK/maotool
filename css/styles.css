@@ -192,6 +192,18 @@ body::before {
   box-shadow: 0 8px 20px rgba(13, 138, 124, 0.28);
 }
 
+a.tab-link {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+a.tab-link:hover {
+  color: var(--accent-deep);
+  background: var(--accent-soft);
+}
+
 .tab-panel {
   display: none;
   animation: rise 0.45s ease both;
