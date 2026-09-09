@@ -60,14 +60,14 @@ body::before {
   z-index: 1;
   max-width: var(--max);
   margin: 0 auto;
-  padding: 28px 20px 72px;
+  padding: 18px 20px 56px;
 }
 
 /* Header */
 .site-header {
   display: grid;
-  gap: 22px;
-  margin-bottom: 28px;
+  gap: 16px;
+  margin-bottom: 18px;
   animation: rise 0.7s ease both;
 }
 
@@ -174,7 +174,7 @@ body::before {
   font: inherit;
   font-weight: 600;
   font-size: 0.92rem;
-  padding: 12px 18px;
+  padding: 10px 14px;
   border-radius: 12px;
   cursor: pointer;
   white-space: nowrap;
@@ -949,12 +949,21 @@ tr.rate-total td { font-weight: 700; }
 }
 
 .panel-compact {
-  padding: 14px 18px 12px;
-  margin-bottom: 14px;
+  padding: 12px 16px 10px;
+  margin-bottom: 12px;
 }
 
 .panel-compact .panel-head {
-  margin-bottom: 10px;
+  margin-bottom: 8px;
+  align-items: center;
+}
+
+.panel-compact h2 {
+  font-size: 1.05rem;
+}
+
+.panel-compact .hint {
+  font-size: 0.8rem;
 }
 
 .school-toolbar {
@@ -1040,24 +1049,30 @@ tr.rate-total td { font-weight: 700; }
   transform: translateY(1px);
 }
 
-.school-query-row {
-  display: grid;
-  grid-template-columns: minmax(220px, 0.9fr) minmax(0, 1.4fr);
-  gap: 16px 20px;
+.school-filters {
+  display: flex;
   align-items: end;
+  gap: 10px;
 }
 
-.school-query-col .section-label {
-  margin-bottom: 8px;
+.school-filters .field {
+  flex: 1 1 0;
+  min-width: 0;
 }
 
-.school-status {
-  margin-top: 8px;
+.school-filters-keyword {
+  flex: 1.35 1 0;
 }
 
-.school-cascade select {
+.school-filters .field label {
+  margin-bottom: 4px;
+  font-size: 0.75rem;
+}
+
+.school-filters input,
+.school-filters select {
   width: 100%;
-  padding: 9px 10px;
+  padding: 8px 10px;
   border: 1px solid var(--line-strong);
   border-radius: 10px;
   background: var(--surface-solid);
@@ -1065,32 +1080,22 @@ tr.rate-total td { font-weight: 700; }
   color: var(--ink);
 }
 
-.school-cascade select:focus {
+.school-filters input:focus,
+.school-filters select:focus {
   outline: none;
   border-color: var(--accent);
   box-shadow: 0 0 0 3px var(--accent-soft);
 }
 
-.school-cascade select:disabled {
+.school-filters select:disabled {
   opacity: 0.55;
   cursor: not-allowed;
   background: #f3f6f7;
 }
 
-#schoolKeyword {
-  width: 100%;
-  padding: 9px 10px;
-  border: 1px solid var(--line-strong);
-  border-radius: 10px;
-  background: var(--surface-solid);
-  font: inherit;
-  color: var(--ink);
-}
-
-#schoolKeyword:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-soft);
+.school-status {
+  margin-top: 8px;
+  font-size: 0.8rem;
 }
 
 .pager-info {
@@ -1106,8 +1111,15 @@ tr.rate-total td { font-weight: 700; }
   .stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .grid-2 { grid-template-columns: 1fr; }
   .grid-3 { grid-template-columns: 1fr; }
-  .school-query-row { grid-template-columns: 1fr; }
   .school-toolbar { width: 100%; justify-content: space-between; }
+  .school-filters { flex-wrap: wrap; }
+  .school-filters .field { flex: 1 1 calc(50% - 10px); }
+}
+
+@media (max-height: 820px) {
+  .brand-tagline { display: none; }
+  .header-meta { display: none; }
+  .site-header { gap: 12px; margin-bottom: 12px; }
 }
 
 @media (max-width: 560px) {

@@ -7,7 +7,7 @@
   <meta name="description" content="WRC 奖项计算器与比赛分数分析工具合集" />
   <link rel="icon" type="image/png" href="favicon.png" />
   <link rel="apple-touch-icon" href="assets/cat-icon.png" />
-  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/styles.css?v=20260909b" />
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 </head>
@@ -317,36 +317,28 @@
           </div>
         </div>
 
-        <div class="school-query-row">
-          <div class="school-query-col">
-            <div class="section-label">学校名称检索</div>
-            <div class="field">
-              <label for="schoolKeyword">关键词</label>
-              <input id="schoolKeyword" type="search" placeholder="如：光明小学" autocomplete="off" />
-            </div>
+        <div class="school-filters">
+          <div class="field school-filters-keyword">
+            <label for="schoolKeyword">学校名称</label>
+            <input id="schoolKeyword" type="search" placeholder="关键词，如：光明小学" autocomplete="off" />
           </div>
-          <div class="school-query-col">
-            <div class="section-label">地区筛选</div>
-            <div class="grid-3 school-cascade">
-              <div class="field">
-                <label for="schoolProvince">省份</label>
-                <select id="schoolProvince">
-                  <option value="">全部省份</option>
-                </select>
-              </div>
-              <div class="field">
-                <label for="schoolCity">城市</label>
-                <select id="schoolCity" disabled>
-                  <option value="">全部城市</option>
-                </select>
-              </div>
-              <div class="field">
-                <label for="schoolDistrict">区县</label>
-                <select id="schoolDistrict" disabled>
-                  <option value="">全部区县</option>
-                </select>
-              </div>
-            </div>
+          <div class="field">
+            <label for="schoolProvince">省份</label>
+            <select id="schoolProvince">
+              <option value="">全部省份</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="schoolCity">城市</label>
+            <select id="schoolCity" disabled>
+              <option value="">全部城市</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="schoolDistrict">区县</label>
+            <select id="schoolDistrict" disabled>
+              <option value="">全部区县</option>
+            </select>
           </div>
         </div>
         <p class="hint school-status" id="schoolStatus">请选择地区或输入校名开始查询</p>
