@@ -41,7 +41,7 @@
             </svg>
           </span>
         </a>
-        <button class="tab-btn" role="tab" data-tab="schools" aria-selected="false">学校查询</button>
+        <button class="tab-btn" role="tab" data-tab="schools" aria-selected="false">中小学名录</button>
       </nav>
     </header>
 
@@ -284,42 +284,51 @@
 
     <!-- ========== Tab 3: Schools ========== -->
     <section id="panel-schools" class="tab-panel" role="tabpanel">
-      <div class="panel">
+      <div class="panel panel-compact">
         <div class="panel-head">
           <div>
-            <h2>全国中小学查询</h2>
-            <p class="hint">支持校名关键词检索，或按省 → 市 → 区县逐级筛选（约 21 万所学校）</p>
+            <h2>中小学名录</h2>
+            <p class="hint">校名关键词与省市区筛选可并用 · 约 21.3 万所</p>
           </div>
-          <button type="button" class="btn btn-secondary" id="schoolResetBtn">清空条件</button>
+          <div class="school-head-meta">
+            <span class="data-stamp" title="源表 k12_schools_20260826">数据截至 2026-08-26</span>
+            <button type="button" class="btn btn-secondary" id="schoolResetBtn">清空条件</button>
+          </div>
         </div>
 
-        <div class="field" style="margin-bottom:14px">
-          <label for="schoolKeyword">学校名称关键词</label>
-          <input id="schoolKeyword" type="search" placeholder="输入学校名称关键字，如：光明小学" autocomplete="off" />
+        <div class="school-query-row">
+          <div class="school-query-col">
+            <div class="section-label">学校名称检索</div>
+            <div class="field">
+              <label for="schoolKeyword">关键词</label>
+              <input id="schoolKeyword" type="search" placeholder="如：光明小学" autocomplete="off" />
+            </div>
+          </div>
+          <div class="school-query-col">
+            <div class="section-label">地区筛选</div>
+            <div class="grid-3 school-cascade">
+              <div class="field">
+                <label for="schoolProvince">省份</label>
+                <select id="schoolProvince">
+                  <option value="">全部省份</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="schoolCity">城市</label>
+                <select id="schoolCity" disabled>
+                  <option value="">全部城市</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="schoolDistrict">区县</label>
+                <select id="schoolDistrict" disabled>
+                  <option value="">全部区县</option>
+                </select>
+              </div>
+            </div>
+          </div>
         </div>
-
-        <div class="section-label">地区筛选</div>
-        <div class="grid-3 school-cascade">
-          <div class="field">
-            <label for="schoolProvince">省份</label>
-            <select id="schoolProvince">
-              <option value="">全部省份</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="schoolCity">城市</label>
-            <select id="schoolCity" disabled>
-              <option value="">全部城市</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="schoolDistrict">区县</label>
-            <select id="schoolDistrict" disabled>
-              <option value="">全部区县</option>
-            </select>
-          </div>
-        </div>
-        <p class="hint" id="schoolStatus" style="margin-top:12px">请选择地区或输入校名开始查询</p>
+        <p class="hint school-status" id="schoolStatus">请选择地区或输入校名开始查询</p>
       </div>
 
       <div class="panel">
@@ -355,7 +364,7 @@
     </section>
 
     <footer class="site-footer">
-      <p class="footer-copy">猫猫工具箱 · WRC 奖项计算器 &amp; 比赛分数分析 &amp; 学校查询</p>
+      <p class="footer-copy">猫猫工具箱 · WRC 奖项计算器 &amp; 比赛分数分析 &amp; 中小学名录</p>
       <div class="visit-stats" id="visitStats" aria-label="访问统计" hidden>
         <span class="visit-item">
           <span class="visit-label">访问</span>

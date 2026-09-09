@@ -945,12 +945,57 @@ tr.rate-total td { font-weight: 700; }
 .grid-3 {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
+  gap: 10px;
+}
+
+.panel-compact {
+  padding: 14px 18px 12px;
+  margin-bottom: 14px;
+}
+
+.panel-compact .panel-head {
+  margin-bottom: 10px;
+}
+
+.school-head-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.data-stamp {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(13, 138, 124, 0.22);
+  background: var(--accent-soft);
+  color: var(--accent-deep);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.school-query-row {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.9fr) minmax(0, 1.4fr);
+  gap: 16px 20px;
+  align-items: end;
+}
+
+.school-query-col .section-label {
+  margin-bottom: 8px;
+}
+
+.school-status {
+  margin-top: 8px;
 }
 
 .school-cascade select {
   width: 100%;
-  padding: 11px 12px;
+  padding: 9px 10px;
   border: 1px solid var(--line-strong);
   border-radius: 10px;
   background: var(--surface-solid);
@@ -972,7 +1017,7 @@ tr.rate-total td { font-weight: 700; }
 
 #schoolKeyword {
   width: 100%;
-  padding: 11px 12px;
+  padding: 9px 10px;
   border: 1px solid var(--line-strong);
   border-radius: 10px;
   background: var(--surface-solid);
@@ -999,6 +1044,7 @@ tr.rate-total td { font-weight: 700; }
   .stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .grid-2 { grid-template-columns: 1fr; }
   .grid-3 { grid-template-columns: 1fr; }
+  .school-query-row { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 560px) {
