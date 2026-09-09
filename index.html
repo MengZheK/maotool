@@ -290,9 +290,30 @@
             <h2>中小学名录</h2>
             <p class="hint">校名关键词与省市区筛选可并用 · 约 21.3 万所</p>
           </div>
-          <div class="school-head-meta">
-            <span class="data-stamp" title="源表 k12_schools_20260826">数据截至 2026-08-26</span>
-            <button type="button" class="btn btn-secondary" id="schoolResetBtn">清空条件</button>
+          <div class="school-toolbar" aria-label="名录数据与操作">
+            <div class="data-chip" title="源表 k12_schools_20260826">
+              <span class="data-chip-icon" aria-hidden="true">
+                <svg viewBox="0 0 20 20" width="16" height="16" fill="none">
+                  <rect x="3" y="4.5" width="14" height="12.5" rx="2.5" stroke="currentColor" stroke-width="1.6"/>
+                  <path d="M3 8.2h14" stroke="currentColor" stroke-width="1.6"/>
+                  <path d="M7 3v3M13 3v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                  <circle cx="7.2" cy="12.2" r="1" fill="currentColor"/>
+                  <circle cx="10" cy="12.2" r="1" fill="currentColor"/>
+                  <circle cx="12.8" cy="12.2" r="1" fill="currentColor"/>
+                </svg>
+              </span>
+              <span class="data-chip-copy">
+                <span class="data-chip-label">数据截至</span>
+                <time class="data-chip-date" datetime="2026-08-26">2026.08.26</time>
+              </span>
+            </div>
+            <button type="button" class="btn-reset" id="schoolResetBtn">
+              <svg viewBox="0 0 20 20" width="15" height="15" fill="none" aria-hidden="true">
+                <path d="M4.2 10a5.8 5.8 0 1 1 1.4 3.8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+                <path d="M4.2 5.6v4.2h4.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              清空条件
+            </button>
           </div>
         </div>
 
