@@ -7,7 +7,7 @@
   <meta name="description" content="WRC 奖项计算器与比赛分数分析工具合集" />
   <link rel="icon" type="image/png" href="favicon.png" />
   <link rel="apple-touch-icon" href="assets/cat-icon.png" />
-  <link rel="stylesheet" href="css/styles.css?v=20260909b" />
+  <link rel="stylesheet" href="css/styles.css?v=20260909c" />
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 </head>
@@ -42,6 +42,7 @@
           </span>
         </a>
         <button class="tab-btn" role="tab" data-tab="schools" aria-selected="false">中小学名录</button>
+        <button class="tab-btn" role="tab" data-tab="video" aria-selected="false">视频压缩</button>
       </nav>
     </header>
 
@@ -376,8 +377,75 @@
       </div>
     </section>
 
+    <!-- ========== Tab 4: Video Compress ========== -->
+    <section id="panel-video" class="tab-panel" role="tabpanel">
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>视频压缩</h2>
+            <p class="hint">质量约束重编码：体积缩小，画质几乎不变。文件只在本机处理，不上传。</p>
+          </div>
+        </div>
+
+        <div class="upload-zone" id="videoDrop">
+          <strong>点击或拖入视频</strong>
+          <p>支持 mp4 / mov / webm · 建议 500MB / 10 分钟以内</p>
+          <input type="file" id="videoInput" accept="video/mp4,video/quicktime,video/webm,video/x-m4v,video/*" />
+        </div>
+        <div class="file-list" id="videoFileTag"></div>
+
+        <div class="section-label" style="margin-top:16px">质量档位</div>
+        <div class="preset-row video-quality-row" role="group" aria-label="质量档位">
+          <button type="button" class="preset-btn" data-quality="near">
+            <span class="preset-name">几乎无损</span>
+            <span class="preset-desc">CRF 18 · 很难看出差别</span>
+          </button>
+          <button type="button" class="preset-btn active" data-quality="high">
+            <span class="preset-name">高画质</span>
+            <span class="preset-desc">CRF 23 · 几乎不变（推荐）</span>
+          </button>
+          <button type="button" class="preset-btn" data-quality="small">
+            <span class="preset-name">更小体积</span>
+            <span class="preset-desc">CRF 28 · 细看略差</span>
+          </button>
+        </div>
+
+        <div class="video-probe" id="videoProbe" hidden></div>
+        <p class="hint" id="videoWarn" hidden></p>
+
+        <div class="actions" style="margin-top:16px">
+          <button type="button" class="btn btn-primary" id="videoStartBtn" disabled>开始压缩</button>
+          <button type="button" class="btn btn-secondary" id="videoClearBtn">清空</button>
+        </div>
+      </div>
+
+      <div class="panel" id="videoProgressPanel" hidden>
+        <div class="panel-head">
+          <div>
+            <h2>处理进度</h2>
+            <p class="hint" id="videoEngineHint">准备中</p>
+          </div>
+        </div>
+        <div class="video-progress-track" aria-hidden="true">
+          <div class="video-progress-bar" id="videoProgressBar"></div>
+        </div>
+        <p class="hint" id="videoProgressText">0%</p>
+      </div>
+
+      <div class="panel" id="videoResultPanel" hidden>
+        <div class="panel-head">
+          <div>
+            <h2>压缩结果</h2>
+            <p class="hint" id="videoResultHint"></p>
+          </div>
+          <button type="button" class="btn btn-primary" id="videoDownloadBtn">下载压缩视频</button>
+        </div>
+        <div class="stat-grid" id="videoResultStats"></div>
+      </div>
+    </section>
+
     <footer class="site-footer">
-      <p class="footer-copy">猫猫工具箱 · WRC 奖项计算器 &amp; 比赛分数分析 &amp; 中小学名录</p>
+      <p class="footer-copy">猫猫工具箱 · WRC · 分数分析 · 中小学名录 · 视频压缩</p>
       <div class="visit-stats" id="visitStats" aria-label="访问统计" hidden>
         <span class="visit-item">
           <span class="visit-label">访问</span>
@@ -422,5 +490,6 @@
   <script src="js/wrc-calculator.js"></script>
   <script src="js/score-analysis.js"></script>
   <script src="js/schools-query.js"></script>
+  <script src="js/video-compress.js"></script>
 </body>
 </html>

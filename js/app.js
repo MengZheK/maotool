@@ -1,7 +1,7 @@
 (() => {
   const buttons = document.querySelectorAll("button.tab-btn");
   const panels = document.querySelectorAll(".tab-panel");
-  const VALID = new Set(["wrc", "score", "schools"]);
+  const VALID = new Set(["wrc", "score", "schools", "video"]);
 
   function activate(id) {
     if (!VALID.has(id)) id = "wrc";
